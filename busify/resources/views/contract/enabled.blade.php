@@ -1,0 +1,65 @@
+@extends('layouts.principal')
+@section('title', 'Contratos habilitados')
+@section('content')
+    <main class="page registration-page" style="height: 100%;">
+        <section class="clean-block clean-form dark" style="height: 100%;">
+            <div class="container">
+                <div class="block-heading">
+                    <h2 class="text-info">Contratos habilitados</h2>
+                    <p>Lista de contratos habilitados cargados en el sistema.</p>
+
+                    <div class="d-flex justify-content-between align-items-center">
+                        <form action="{{ route('contract.enabled') }}" method="GET" class="col-sm-6"
+                            style="background: transparent; border: none; box-shadow: none; padding-left: 0; margin: 0;">
+                            @csrf
+                            <div class="input-group">
+                                <input type="text" class="form-control" name="searchText" placeholder="Buscar contrato"
+                                    value="{{ $searchText }}">
+                                <span class="input-group-btn">
+                                    <button type="submit" class="btn btn-primary" style="margin-left: 1em">Buscar</button>
+                                </span>
+                            </div>
+                        </form>
+
+                    </div>
+
+                    <div class="table-responsive d-flex mx-auto" style="margin-top: 0px;">
+
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th style="width: 15em;">Fecha de inicio</th>
+                                    <th style="width: 13em;">Fecha de fin</th>
+                                    <th style="width: 15em;">Monto de cuota</th>
+                                    <th style="width: 15em;">Estado</th>
+                                    <th style="width: 15em;">Cliente</th>
+                                    <th style="padding-left: 4px;margin-left: 3px;width: 20em;">Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+
+                                @foreach ($contracts as $contract)
+                                    <tr>
+                                        <td>{{ $contract->contract_start_date }}</td>
+                                        <td>{{ $contract->contract_end_date ? $contract->contract_end_date : 'Sin especificar' }}
+                                        </td>
+                                        <td>${{number_format($contract->contract_montly_fee, 2, ',', '.')}}</td>   
+                                        <td>{{ $contract->contract_state }}</td>
+                                        <td><a target="_blank" href="{{ route('client.show', $contract->client->id) }}"><i
+                                                    class="fas fa-info-circle"></i>{{ $contract->client->user->name . ' ' . $contract->client->user->lastName }}
+                                        </td>
+                                        <td>
+                                            <a target="_blank" href="{{route('contract.show', $contract->id)}}" class="btn btn-info" type="button"
+                                                style="margin-right: 13px;"><i class="far fa-list-alt"></i>Detalles</a>
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                    {{ $contracts->links() }}
+                </div>
+            </div>
+        </section>
+    </main>
+@endsection
